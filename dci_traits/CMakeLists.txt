@@ -3,9 +3,6 @@ project(DataContextInteraction CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(traits
-        domain.h
-        context.h
-        role.h
+add_executable(dci_traits
         main.cpp
 )
