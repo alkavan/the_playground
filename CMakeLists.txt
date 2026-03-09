@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 project(cpp_playground CXX)
 
+add_subdirectory(box)
 add_subdirectory(cache_padding)
 add_subdirectory(covariant_dispatch)
 add_subdirectory(dci_traits)
