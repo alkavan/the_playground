@@ -6,7 +6,7 @@ int main()
 {
     using namespace util;
 
-    /* 1. no_create – allocate handle but don't create resource */
+    /* 1. No Create – allocate handle but don't create resource */
     box<std::string> s1{tags::no_create};       // s1 is empty (nullptr)
     box<std::vector<int>> v1{tags::no_create};  // v1.get() returns NULL
     v1.reset(new std::vector{1,2,3});           // ... later ...
@@ -19,7 +19,7 @@ int main()
     box<int> zero{tags::value_init};         // *zero == 0
     box<std::string> def{tags::value_init};  // calls default constructor
 
-    /* 4. In-Place – Construct in-place from args */
+    /* 4. In Place – Construct in-place from args */
     box<std::string> s2{tags::in_place, "hello", 5};           // in-place construction
     box<std::vector<int>> v2{tags::in_place, {1, 2, 3, 4}};  // no temporary vector
 
@@ -30,5 +30,5 @@ int main()
 
     /* 6. Non-default-constructible types still only work with in_place */
     struct NonDefault { explicit NonDefault(int) {} };
-    box<NonDefault> nd{std::in_place, 42};  // OK
+    box<NonDefault> nd{tags::in_place, 42};  // OK
 }

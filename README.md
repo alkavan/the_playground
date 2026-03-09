@@ -6,7 +6,7 @@ A playground project for testing new features introduced in new C++ standards.
 
 ### Box
 Custom `box<T>` smart pointer demonstrating tagged constructors for different
-initialization strategies (`no_create`, `no_init`, `value_init`, `in-place`).
+initialization strategies (`no_create`, `no_init`, `value_init`, `in_place`).
 
 ```cpp
 box<std::string> s1{tags::no_create};             // s1 is empty (nullptr)
