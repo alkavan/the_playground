@@ -9,8 +9,18 @@ Custom `box<T>` smart pointer demonstrating tagged constructors for different
 initialization strategies (`no_create`, `no_init`, `value_init`, `in_place`).
 
 ```cpp
-box<std::string> s1{tags::no_create};             // s1 is empty (nullptr)
-box<std::string> s2{tags::in_place, "hello", 5};  // in-place construction
+const box<int> raw{tags::no_init};  // *raw is uninitialized garbage until you write to it
+*raw = 42;                          // now safe
+```
+
+```cpp
+box<int> zero{tags::value_init};       // *zero == 0
+box<std::string> s1{tags::no_create};  // s1 is empty (nullptr)
+```
+
+```cpp
+box<std::string> s2{tags::in_place, "hello", 5};         // in-place construction
+box<std::vector<int>> v2{tags::in_place, {1, 2, 3, 4}};  // no temporary vector
 ```
 
 ### Cache Padding

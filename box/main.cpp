@@ -7,7 +7,7 @@ int main()
     using namespace util;
 
     /* 1. No Create – allocate handle but don't create resource */
-    box<std::string> s1{tags::no_create};       // s1 is empty (nullptr)
+    box<std::string> s1{tags::no_create};       // s1 is empty
     box<std::vector<int>> v1{tags::no_create};  // v1.get() returns NULL
     v1.reset(new std::vector{1,2,3});           // ... later ...
 
@@ -24,7 +24,7 @@ int main()
     box<std::vector<int>> v2{tags::in_place, {1, 2, 3, 4}};  // no temporary vector
 
     /* 5. Ownership */
-    box<std::string> b(tags::in_place, "cat");  // Owns a string.
+    box<std::string> b(tags::in_place, "cat");  // owns a string.
     const std::string* owner = b.release();     // b is now empty; c owns the string.
     delete owner;                               // or wrap in another smart pointer.
 
