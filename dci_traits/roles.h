@@ -1,9 +1,8 @@
 #ifndef ROLES_H
 #define ROLES_H
 
-#include <memory>
+#include <functional>
 #include <concepts>
-
 #include "context.h"
 
 template <typename Animal, typename Reaction>
@@ -18,31 +17,20 @@ concept EnvironmentReaction = requires(
 template <typename Animal>
 class AnimalReactionRole {
 public:
-    template <typename T> requires EnvironmentReaction<Animal, T>
-    AnimalReactionRole(Animal animal, T impl)
-        : animal_(std::move(animal)), impl_(std::make_shared<Model<T>>(std::move(impl))) {}
+    template <typename Reaction> requires EnvironmentReaction<Animal, Reaction>
+    AnimalReactionRole(Animal animal, Reaction reaction)
+        : animal_(std::move(animal))
+        , react_func_([r = std::move(reaction)](const Animal& a, const EnvironmentContext& ctx) {
+            r.react(a, ctx);
+        }) {}
 
     void react(const EnvironmentContext& context) const {
-        impl_->react(animal_, context);
+        react_func_(animal_, context);
     }
 
 private:
-    struct Concept {
-        virtual ~Concept() = default;
-        virtual void react(const Animal& animal, const EnvironmentContext& context) = 0;
-    };
-
-    template <typename T>
-    struct Model final : Concept {
-        explicit Model(T impl) : impl_(std::move(impl)) {}
-        void react(const Animal& animal, const EnvironmentContext& context) override {
-            impl_.react(animal, context);
-        }
-        T impl_;
-    };
-
     Animal animal_;
-    std::shared_ptr<Concept> impl_;
+    mutable std::move_only_function<void(const Animal&, const EnvironmentContext&)> react_func_;
 };
 
-#endif //ROLES_H
+#endif // ROLES_H
