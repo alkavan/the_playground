@@ -9,3 +9,8 @@ add_subdirectory(match)
 add_subdirectory(modules)
 add_subdirectory(reference_wrapper)
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "16.1")
+    add_subdirectory(gnu26_modules)
+else()
+    message(STATUS "GCC 16.1 or higher compiler was not detected, gnu26 examples will be omitted.")
+endif()
