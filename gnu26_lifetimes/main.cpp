@@ -76,7 +76,8 @@ int main() {
         return 1;
     }
 
-    if (uint32_t crc32_sum = crc32(raw_packet + 12, 8); header->checksum != crc32_sum) {
+    if (uint32_t crc32_sum = crc32(raw_packet + sizeof(PacketHeader), sizeof(DataPayload));
+        header->checksum != crc32_sum) {
         std::println("Wrong data checksum: 0x{:08X}", crc32_sum);
         return 1;
     }
