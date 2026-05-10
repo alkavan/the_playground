@@ -19,8 +19,6 @@ if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "16.1")
             "Detected GCC version: ${CMAKE_CXX_COMPILER_VERSION}\n"
             "Please upgrade your GCC installation."
     )
-else()
-    message(STATUS "GCC ${CMAKE_CXX_COMPILER_VERSION} detected - C++26 support enabled")
 endif()
 
 add_executable(gnu26_modules
