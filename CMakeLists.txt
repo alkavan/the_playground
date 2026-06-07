@@ -11,6 +11,7 @@ add_subdirectory(reference_wrapper)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "16.1")
     add_subdirectory(gnu26_contracts)
+    add_subdirectory(gnu26_execution)
     add_subdirectory(gnu26_modules)
     add_subdirectory(gnu26_lifetimes)
     add_subdirectory(gnu26_reflections)
