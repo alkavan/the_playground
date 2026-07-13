@@ -14,6 +14,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_G
     add_subdirectory(gnu26_modules)
     add_subdirectory(gnu26_lifetimes)
     add_subdirectory(gnu26_reflections)
+    add_subdirectory(gnu26_compile_time_adventures)
 else()
     message(STATUS "GCC 16.1 or higher compiler was not detected, gnu26 examples will be omitted.")
 endif()
