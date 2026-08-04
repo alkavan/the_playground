@@ -9,6 +9,7 @@ add_subdirectory(match)
 #add_subdirectory(modules)
 add_subdirectory(pinned_colony)
 add_subdirectory(reference_wrapper)
+add_subdirectory(special_day)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "16.1")
     add_subdirectory(gnu26_contracts)
