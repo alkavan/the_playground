@@ -5,23 +5,25 @@
 #include <ranges>
 #include <print>
 
-// -----------------------------------------------------------------------------
-// Domain
-// -----------------------------------------------------------------------------
-struct Item {
-    std::string_view name;
-    int value = 0;     // gold
-    int rarity = 1;    // 1=common ... 5=legendary
-    int quantity = 1;  //
-};
+namespace {
+    // -----------------------------------------------------------------------------
+    // Domain
+    // -----------------------------------------------------------------------------
+    struct Item {
+        std::string_view name;
+        int value = 0;    // gold
+        int rarity = 1;   // 1=common ... 5=legendary
+        int quantity = 1; //
+    };
 
-struct AdventureResult {
-    std::array<Item, 16> inventory{};
-    std::size_t count = 0;
-    int total_gold = 0;
-    int legendary_count = 0;
-    int items_discovered = 0;
-};
+    struct AdventureResult {
+        std::array<Item, 16> inventory{};
+        std::size_t count = 0;
+        int total_gold = 0;
+        int legendary_count = 0;
+        int items_discovered = 0;
+    };
+}
 
 // -----------------------------------------------------------------------------
 // The entire program runs at compile time
@@ -31,7 +33,8 @@ consteval AdventureResult run_adventure() {
     std::vector<Item> loot_log;
 
     // Helper: add or increase quantity
-    auto add_item = [&](const std::string_view name, const int value, const int rarity, const int qty = 1) {
+    auto add_item = [&](const std::string_view name, const int value,
+                        const int rarity, const int qty = 1) {
         const auto it = std::ranges::find_if(bag, [&](const Item &i) {
             return i.name == name;
         });
@@ -39,37 +42,39 @@ consteval AdventureResult run_adventure() {
         if (it != bag.end()) {
             it->quantity += qty;
         } else {
-            bag.push_back({name, value, rarity, qty});
+            bag.push_back({.name = name, .value = value, .rarity = rarity, .quantity = qty});
         }
-        loot_log.push_back({name, value, rarity, qty});
+        loot_log.push_back({.name = name, .value = value, .rarity = rarity, .quantity = qty});
     };
 
     // ---------- Starting Gear ------------------------------------------------
-    add_item("Rusty Sword",     15, 1);
-    add_item("Leather Armor",   25, 1);
-    add_item("Health Potion",   10, 1, 3);
+    add_item("Rusty Sword", 15, 1);
+    add_item("Leather Armor", 25, 1);
+    add_item("Health Potion", 10, 1, 3);
 
     // ---------- Event 1: Cave ------------------------------------------------
-    add_item("Gold Coin",          1, 1, 47);
-    add_item("Silver Ring",       40, 2);
-    add_item("Mysterious Scroll",  5, 3);
+    add_item("Gold Coin", 1, 1, 47);
+    add_item("Silver Ring", 40, 2);
+    add_item("Mysterious Scroll", 5, 3);
 
     // ---------- Event 2: Boss Fight ------------------------------------------
     if (const auto it = std::ranges::find_if(bag,
-        [](const Item& i) { return i.name == "Health Potion"; });
+                                             [](const Item &i) { return i.name == "Health Potion"; });
         it != bag.end()
-        ) { /* Lose some potions */it->quantity = std::max(0, it->quantity - 2);
+    ) {
+        /* Lose some potions */
+        it->quantity = std::max(0, it->quantity - 2);
     }
 
-    add_item("Dragon Scale",  200, 4);
+    add_item("Dragon Scale", 200, 4);
     add_item("Ancient Blade", 350, 5);
 
     // ---------- Event 3: Crafting --------------------------------------------
     // Spend 10 gold coins + the scroll -> Enchanted Amulet
-    const auto coin_it   = std::ranges::find_if(bag,
-        [](const Item& i){ return i.name == "Gold Coin"; });
-    auto scroll_it = std::ranges::find_if(bag,
-        [](const Item& i){ return i.name == "Mysterious Scroll"; });
+    const auto coin_it = std::ranges::find_if(bag,
+                                              [](const Item &i) { return i.name == "Gold Coin"; });
+    const auto scroll_it = std::ranges::find_if(bag,
+                                          [](const Item &i) { return i.name == "Mysterious Scroll"; });
 
     if (coin_it != bag.end() && coin_it->quantity >= 10 && scroll_it != bag.end()) {
         coin_it->quantity -= 10;
@@ -82,7 +87,7 @@ consteval AdventureResult run_adventure() {
 
     // Remove zero-quantity items and compute totals
     std::vector<Item> final_items;
-    for (const auto& item : bag) {
+    for (const auto &item: bag) {
         if (item.quantity > 0) {
             final_items.push_back(item);
             result.total_gold += item.value * item.quantity;
@@ -92,7 +97,7 @@ consteval AdventureResult run_adventure() {
     }
 
     // Sort: highest rarity first, then highest value
-    std::ranges::sort(final_items, [](const Item& a, const Item& b) {
+    std::ranges::sort(final_items, [](const Item &a, const Item &b) {
         if (a.rarity != b.rarity) return a.rarity > b.rarity;
         return a.value > b.value;
     });
@@ -121,12 +126,9 @@ int main() {
     std::println("Final Inventory (rarity -> value):\n");
 
     for (std::size_t i = 0; i < FINAL.count; ++i) {
-        const auto&[name, value, rarity, quantity] = FINAL.inventory[i];
-        const char* stars =
-            rarity == 5 ? "★★★★★" :
-            rarity == 4 ? "★★★★☆" :
-            rarity == 3 ? "★★★☆☆" :
-            rarity == 2 ? "★★☆☆☆" : "★☆☆☆☆";
+        const auto &[name, value, rarity, quantity] = FINAL.inventory[i];
+        const char *stars =
+                rarity == 5 ? "★★★★★" : rarity == 4 ? "★★★★☆" : rarity == 3 ? "★★★☆☆" : rarity == 2 ? "★★☆☆☆" : "★☆☆☆☆";
 
         std::println("  {:>2}. {:<20} {:>4} gold  {}  ×{}",
                      i + 1, name, value, stars, quantity);
